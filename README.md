@@ -1,2 +1,2 @@
 # RiverChat
-# a VUE3+TS+PINIA+SOCKET/IO project
+# a vue3+typescirpt+pinia+socket.io project
