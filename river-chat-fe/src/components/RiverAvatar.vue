@@ -8,8 +8,9 @@ import { ref } from 'vue'
 import { formatTime } from '@/utils/common';
 const appstate = useAppStore()
 const chatstate = useChatStore()
+//通过withDefaults给予props默认值
 withDefaults(defineProps<{
-  data: GroupMessage | FriendMessage
+  data: GroupMessage | FriendMessage | User
   showTime?: boolean
 }>(), {
   showTime: true
@@ -54,7 +55,7 @@ function addFriend(friendId: string) {
     </n-popover>
     <div>
       <span class="avatar-name">{{ chatstate.userGather[data.userId].username }}</span>
-      <span class="avatar-time" v-if="showTime">{{ formatTime(data.time) }}</span>
+      <span class="avatar-time" v-if="showTime">{{ formatTime((data as GroupMessage | FriendMessage).time) }}</span>
     </div>
   </div>
 </template>

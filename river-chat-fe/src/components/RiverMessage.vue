@@ -8,6 +8,7 @@ import 'viewerjs/dist/viewer.css'
 import { component as Viewer } from "v-viewer"
 import RiverAvatar from './RiverAvatar.vue';
 import RiverInput from './RiverInput.vue';
+import RiverActive from './RiverActive.vue';
 const chatstate = useChatStore()
 const appstate = useAppStore()
 const spinning = ref<boolean>(false)
@@ -17,6 +18,7 @@ const needScrollToBottom = ref<boolean>(true)
 const messageRef = ref<HTMLElement>()
 const messageContentRef = ref<HTMLElement>()
 const headerRef = ref<HTMLElement>()
+const ifAciveShow = ref<boolean>()
 const chatName = computed(() => {
   if (!chatstate.activeRoom) return ''
   if (chatstate.groupGather[(chatstate.activeRoom as Group).groupId]) {
@@ -49,7 +51,6 @@ function getImageStyle(src: string) {
   let width = Number(arr[2]);
   let height = Number(arr[3]);
   if (appstate.mobile) {
-    // 如果是移动端,图片最大宽度138, 返回值加12是因为设置的是图片框的宽高要加入padding值
     if (width > 138) {
       height = (height * 138) / width;
       width = 138;
@@ -78,7 +79,6 @@ function getImageStyle(src: string) {
 async function scrollToBottom() {
   nextTick(() => {
     messageRef.value!.scrollTop = messageRef.value!.scrollHeight
-    console.log(messageRef.value!)
     messageOpacity.value = 1;
   })
 }
@@ -96,6 +96,8 @@ onMounted(() => {
       <div class="message-header-box">
         <span class="message-header-text" ref="headRef">{{ chatName }}</span>
         <n-spin class="message-loading-icon" size="small" v-if="chatstate.dropped" />
+        <river-active v-if="chatstate.groupGather[(chatstate.activeRoom as Group)?.groupId]" type="group" />
+        <river-active v-else type="friend" />
       </div>
     </div>
     <transition name="loading">
